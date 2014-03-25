@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Travel Manager</title>
+</head>
+<!-- This page serves as the manager for all travel itineraries for the user. From here, the user may create a new travel plan, view and upate existing itineraries and delete an itinerary. The page needs to populate with the information stored within the database so user has to be be already logged in before viewing this page.  -->
+
+<body>
+<ul id="nav_menu"> 
+	<li>Create a new travel plan</li>
+</ul>
+<!-- Show a list of existing travel itineraries -->
+<!-- This list will be populated by the database. If there is no current plan, the page will state "You currently have no travel plans. Click here to create one!" -->
+<h4>Current Itineraries</h4>
+<table border="1px solid black">
+	<tr>
+    	<th>Date</th>
+        <th>Destination</th>
+        <th>Duration</th>
+    </tr>
+    <tr> <!-- Sample data -->
+    	<td>February 14, 2014</td>
+        <td>New Haven, Connecticut</td>
+        <td>3 days</td>
+        <td><input type="button" value="view"></td> <!-- Clicking on the view button shows the details of this trip-->
+    </tr>
+</table>
+</body>
+</html>

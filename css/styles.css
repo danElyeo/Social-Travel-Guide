@@ -1,0 +1,90 @@
+/* CSS Document */
+#wrapper {
+	width:800px;
+	margin-left:auto;
+	margin-right:auto;
+	background-color:white; 
+	border:1px solid black;
+	position:relative;
+	/*margin-top:-8px;*/
+}
+#banner {
+	border:1px solid black;	
+}
+body {
+		font-family:Arial, Helvetica, sans-serif;
+		background-image:url(../images/World-Map.jpg);
+		background-repeat:no-repeat;
+		background-position:center;
+		background-size:cover;
+		background-color:white;
+	}
+#title {
+	font-family:"Courier New", Courier, monospace;
+	color:darkblue;	
+}
+img.logo {
+	width:100px;
+	height:100px;
+	position:absolute;;
+	top:0px;
+	right:10px;
+	margin-top:5px;
+}
+img.megaphone {
+	height:100px;
+	position:absolute;
+	top:0px;
+	left:50px;
+	margin-top:5px;
+}
+#tagline {
+	text-align:center;
+	font-style:italic;
+	font-family:Tahoma, Geneva, sans-serif;	
+}
+.text_center {
+	text-align:center;	
+}
+.center {
+	margin-left:auto;
+	margin-right:auto;	
+}
+
+#main_menu, #footer_menu {
+	text-align:center;	
+}
+#main_menu li, #footer_menu li{
+	list-style-type:none;
+	display:inline;
+	padding-right:20px;
+}
+.menu a:link { text-decoration:none; color:blue;}
+.menu a:visited { text-decoration:none; color:blue;}
+.menu a:hover { text-decoration:none; color:blue;}
+.menu a:active { text-decoration:none; color:blue;}
+
+.main_content_area {
+	width:778px;
+	height:600px;
+	padding:10px;
+	border:1px solid black;
+	background-color:whitesmoke;
+}
+
+.header {
+	
+}
+.footer {
+	border:1px solid black;
+	font-size:12px;
+}
+.left_indent { margin-left:50px; }
+
+.with_border {
+	border:1px solid black;	
+}
+
+#travel_details table, #travel_details th, #travel_details td{
+	border:1px solid black;		
+}
