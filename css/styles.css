@@ -88,3 +88,8 @@ img.megaphone {
 #travel_details table, #travel_details th, #travel_details td{
 	border:1px solid black;		
 }
+
+.error {
+	font-size:0.75em;
+	color:red;	
+}
