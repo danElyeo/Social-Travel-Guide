@@ -11,21 +11,28 @@ if(isset($_POST['username']) && isset($_POST['password']))
 	// Store result set in $user_info
 	$user_info = get_user_info($username, $password);
 	//print_r($user_info);
+	session_start();
 	
 	if(!empty($user_info))
 	{
-		session_start(); // this is needed otherwise session variables won't be saved!
-		
 		$_SESSION['user_id'] = $user_info['user_id'];
 		$_SESSION['username'] = $user_info['username'];
 		//echo "Session userid: " . $_SESSION['user_id'];
 		//echo "Session username: " . $_SESSION['username'];
-		header( 'Location: ../' ) ; // redirect back to index page
+		// Redirect user to the dashboard
+		$_SESSION['state'] = "user_dashboard";
+		//header( 'Location: ../' ) ; // redirect back to index page
 	}
 	else // invalid username or password
 	{
-		header( 'Location: ../index.php?invalid_login=true' ) ;	
+		//echo "invalid login!";
+		$_SESSION['state'] = "invalid_login";
+		//header( 'Location: ../index.php?invalid_login=true' ) ;
+		//$GLOBALS['action'] = "invalid_login";
+		//header( 'Location: ../');
 	}
+	
+	header( 'Location: ../' );
 }
 
 // Connect to the database to get the user_info from user table
