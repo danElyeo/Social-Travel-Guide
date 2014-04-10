@@ -3,6 +3,10 @@
 
 require_once('database.php'); // connect to the database
 
+// Initializing variables
+$email_unique = false;
+$username_unique = false;
+
 // Check if all the fields have values
 if( isset($_POST['first_name']) && 
 	isset($_POST['last_name']) && 
@@ -20,10 +24,29 @@ if( isset($_POST['first_name']) &&
 	$r_password = $_POST['r_password'];
 	$email = $_POST['email'];
 	
-	if($password === $r_password)
+	if($password === $r_password) // passwords match
 	{
 		// Check if username already exist
-		print_r("Checking if username exists: " . check_username($username));
+		check_username($username);
+		check_email($email);
+		if($username_unique && $email_unique)
+		{
+			echo "Username and email are unique. Proceed to register";	
+		}
+		else
+		{
+			if(!$username_unique)
+			{
+				echo "Username already exists. Try another!";	
+			}
+			if(!$email_unique)
+			{
+				echo "Email already exists. Try another!";	
+			}
+			
+		}	
+		//print_r("Checking if username exists: " . check_username($username));
+		//print_r($temp['username']);
 		//register_user($first_name, $last_name, $username, $password, $email);	
 	}
 	else
@@ -32,19 +55,48 @@ if( isset($_POST['first_name']) &&
 	}
 }
 
-function check_username($user_name)
+function check_username($_username)
 {
 	global $db;
+	global $username_unique;
     $query = 'SELECT username FROM user
               WHERE username = :username'
 			  ;
     try {
         $statement = $db->prepare($query);
-        $statement->bindValue(':username', $user_name);
+        $statement->bindValue(':username', $_username);
         $statement->execute();
         $result = $statement->fetch();
         $statement->closeCursor();
-        return $result;
+		if(!$result)
+		{
+			//echo "username is unique. Proceed to register";
+			$username_unique = true;
+		}
+		
+    } catch (PDOException $e) {
+        display_db_error($e->getMessage());
+    }
+}
+
+function check_email($_email)
+{
+	global $db;
+	global $email_unique;
+    $query = 'SELECT email FROM user
+              WHERE email = :email'
+			  ;
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':email', $_email);
+        $statement->execute();
+        $result = $statement->fetch();
+        $statement->closeCursor();
+		if(!$result)
+		{
+			//echo "email is unique. Proceed to register";
+			$email_unique = true;
+		}
 		
     } catch (PDOException $e) {
         display_db_error($e->getMessage());

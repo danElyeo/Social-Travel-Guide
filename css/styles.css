@@ -93,3 +93,10 @@ img.megaphone {
 	font-size:0.75em;
 	color:red;	
 }
+
+.required:after {
+	color:#BE0000;
+	content:"*";
+	font-weight:bold;
+}
+	
