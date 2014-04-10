@@ -1,6 +1,6 @@
 <?php
 // This script handles the registration functionality. It retrieves all the user information from the registration page and insert a new row into the database user table. 
-
+require_once('../util/main.php');
 require_once('database.php'); // connect to the database
 
 // Initializing variables
@@ -31,7 +31,7 @@ if( isset($_POST['first_name']) &&
 		check_email($email);
 		if($username_unique && $email_unique)
 		{
-			echo "Username and email are unique. Proceed to register";	
+			register_user($first_name, $last_name, $username, $password, $email);	
 		}
 		else
 		{
@@ -45,9 +45,6 @@ if( isset($_POST['first_name']) &&
 			}
 			
 		}	
-		//print_r("Checking if username exists: " . check_username($username));
-		//print_r($temp['username']);
-		//register_user($first_name, $last_name, $username, $password, $email);	
 	}
 	else
 	{
@@ -106,6 +103,9 @@ function check_email($_email)
 function register_user($first, $last, $user, $pass, $email)
 {
 	global $db;
+	global $host;
+	global $app_path;
+	
     $query = 'INSERT INTO user (
 				first_name,
 				last_name,
@@ -125,12 +125,15 @@ function register_user($first, $last, $user, $pass, $email)
         $statement->bindValue(':username', $user);
 		$statement->bindValue(':password', $pass);
 		$statement->bindValue(':email', $email);
-        $statement->execute();
-        $result = $statement->fetch(); // returns true or false;
+        $result = $statement->execute(); // returns true or false;
+        //$result = $statement->fetch();
         $statement->closeCursor();
         
+		// If registration is successful, go back to home page to get user to log in
 		if($result) {
-			echo "Registration successful!";		
+			echo "Registration successful!<br>";
+			$front = $host . $app_path;
+			echo "Click <a href='$front'>here</a> to return to the home page to log in.";	
 		} 
 		else
 		{

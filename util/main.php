@@ -3,7 +3,8 @@
 $doc_root = $_SERVER['DOCUMENT_ROOT']; // xampp/htdocs/
 
 // Get the application path
-$uri = $_SERVER['REQUEST_URI']; // cs601/Project/
+$host = "http://localhost";
+$uri = $_SERVER['REQUEST_URI']; // /cs601/Project/
 $dirs = explode('/', $uri);
 $app_path = '/' . $dirs[1] . '/' . $dirs[2] . '/';
 

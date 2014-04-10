@@ -52,7 +52,7 @@ if(!isset($_SESSION['state']))
 			// clear all current session variables
 			session_unset();
 			session_destroy();
-			header ("location: ./"); // refreshes the index page
+			header ("location:" . $host . $app_path); // refreshes the index page
 		}
 	}
 ?>

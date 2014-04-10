@@ -56,7 +56,7 @@ submit_btn.disabled = true;
 
 function redirect_home() 
 {
-	window.location.replace("http://localhost<?php echo $app_path?>");
+	window.location.replace("<?php echo $host . $app_path?>");
 }
 
 function agree()
