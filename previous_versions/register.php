@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("../view/header.php"); ?>
 
 <div id="registration_form" class="main_content_area">
 	<h2 class="center">Register New User</h2>
@@ -44,4 +44,4 @@
 </form>
 </div>
 
-<?php include("footer.php"); ?>
+<?php include("../view/footer.php"); ?>

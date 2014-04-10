@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("view/header.php"); ?>
 <!-- This page lets the user create an initial travel itinerary. Once the items are filled out, it will create an entry in the SQL database as an itinerary -->
 
 
@@ -32,4 +32,4 @@
     </form>
 </div>
 
-<?php include("footer.php"); ?>
+<?php include("view/footer.php"); ?>

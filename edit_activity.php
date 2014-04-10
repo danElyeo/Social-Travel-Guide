@@ -1,4 +1,4 @@
-<?php include("header.php") ?>
+<?php include("view/header.php") ?>
 <!-- This page allows a user to create an activity to consider for their travel itinerary. When a user invite friends to provide suggestions, this is also the page that they will see.-->
 
 <div id="edit_activity" class="main_content_area">
@@ -58,4 +58,4 @@
     </form>
 </div>
 
-<?php include("footer.php") ?>
+<?php include("view/footer.php") ?>

@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("view/header.php"); ?>
 
 
 <!-- Show a list of existing travel itineraries -->
@@ -24,4 +24,4 @@
     </table>
 </div>
 
-<?php include("footer.php"); ?>
+<?php include("view/footer.php"); ?>

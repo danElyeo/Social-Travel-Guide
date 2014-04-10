@@ -1,4 +1,4 @@
-<?php include("header.php") ?>
+<?php include("view/header.php") ?>
 
 <div id="about_page" class="main_content_area">
 	<h2 class="text_center">About Social Travel Guide</h2>
@@ -7,4 +7,4 @@
 	<p>The application will utilize a calendar plugin for selecting travel dates, GoogleMaps API for visualizing geography and routes, a photo upload mechanism for showing pictures, and a social network plugin for sharing your travel plans on Facebook. MySQL database will be used to store user information and data, and the language used to develop the site will be HTML, PHP and JavaScript.</p>
 </div>
 
-<?php include("footer.php") ?>
+<?php include("view/footer.php") ?>

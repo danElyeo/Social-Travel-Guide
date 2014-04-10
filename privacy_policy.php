@@ -1,4 +1,4 @@
-<?php include("header.php") ?>
+<?php include("view/header.php") ?>
 
 <div id="privacy_policy" class="main_content_area">
 	<h2 class="text_center">Privacy Policy</h2>
@@ -6,4 +6,4 @@
     <p>This website will not share personal information with any other parties. The information collected is solely for the purpose of the CS601 Final Project and not for commercial use.</p>
 </div>
 
-<?php include("footer.php") ?>
+<?php include("view/footer.php") ?>

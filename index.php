@@ -3,11 +3,13 @@ require_once('util/main.php'); // starts the session
 require_once('util/tags.php');
 require_once('model/database.php');
 
-include("header.php"); 
+include("view/header.php"); 
 
 // debug
 //echo "Current username is: " . $_SESSION['username'] . "<br/>";
 //echo "Current user_id is: " . $_SESSION['user_id'] . "<br/>";
+
+// If there is no session state, create one and set to login
 if(!isset($_SESSION['state']))
 {
 	$_SESSION['state'] = "login";	
@@ -27,9 +29,10 @@ if(!isset($_SESSION['state']))
 			include("view/login_view.php");
 		break;
 		
-		case "register_user":
-			include("view/register_view.php");
-		break;
+		//case "register_user":
+			//include("view/register_view.php");
+			//$_SESSION['state'] = "login";
+		//break;
 		
 		case "user_dashboard":
 			include("view/dashboard_view.php");
@@ -77,7 +80,7 @@ function check_login() {
 }
 </script>
 
-<?php include("footer.php"); ?>
+<?php include("view/footer.php"); ?>
 
 
 

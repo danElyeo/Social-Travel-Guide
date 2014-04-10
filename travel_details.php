@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("view/header.php"); ?>
 
 <div id="travel_details" class="main_content_area">
     <ul id="options_menu">
@@ -39,4 +39,4 @@
         </tr>
     </table>
 </div>
-<?php include("footer.php"); ?>
+<?php include("view/footer.php"); ?>
