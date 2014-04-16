@@ -9,53 +9,56 @@ include("view/header.php");
 //echo "Current username is: " . $_SESSION['username'] . "<br/>";
 //echo "Current user_id is: " . $_SESSION['user_id'] . "<br/>";
 
-// If there is no session state, create one and set to login
-if(!isset($_SESSION['state']))
+// If the user has previously logged out, clear session and reload
+/*if(isset($_GET['logout']) && $_GET['logout'])
 {
-	$_SESSION['state'] = "login";	
-}
+	session_unset();
+	session_destroy();
+	header("Location:./"); // refresh the page
+}*/
+
 ?>
 <!-- Depending on the state of the site, main content area will change -->
 <div class="main_content_area">
-<?php 
-	// Check the current state of the session and display views according the current state
-	switch($_SESSION['state'])
-	{
-		case "login":
-			include("view/login_view.php");
-		break;
+<?php
+// If user is logged in, show the dashboard, otherwise show the login view.
+if(isset($_SESSION['user_id']) && isset($_SESSION['username'])) 
+{
+	// Show the user dashboard
+	include("view/dashboard_view.php");
+	
+	// If there is no session state, create one and set to login
+	//if(!isset($_SESSION['state']))
+	//{
+		//$_SESSION['state'] = "user_dashboard"; // default state	
+	//}
+	
+	// Debug
+	//echo "Current state: " . $_SESSION['state']; 
 		
-		case "invalid_login":
-			include("view/login_view.php");
-		break;
-		
-		//case "register_user":
-			//include("view/register_view.php");
-			//$_SESSION['state'] = "login";
-		//break;
-		
+	//While the user is logged in, there may be many different views/states. Parse through the session state to determine which view to render to the user.
+	/*switch($_SESSION['state'])
+	{	
 		case "user_dashboard":
 			include("view/dashboard_view.php");
 		break;
 		
+		// Show create itinerary form
+		case "new_itinerary":
+			include("view/new_itinerary.php");
+		break;
+		
 		default:
-			include("view/login_view.php");
+			include("view/dashboard_view.php");
 		break;	
-	}
+	}*/
+}
+else // user is not logged in; show only the login view
+{
+	include("view/login_view.php");
+}
 ?>
 
-<?php // Check if user has previously logged out
-	if(isset($_GET['logout']))
-	{
-		if($_GET['logout']) // if logout is true
-		{ 
-			// clear all current session variables
-			session_unset();
-			session_destroy();
-			header ("location:" . $host . $app_path); // refreshes the index page
-		}
-	}
-?>
 
 <?php /*// if user is  logged in, show user dashboard
 if(isset($_SESSION['user_id']) && isset($_SESSION['username'])):?>

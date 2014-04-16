@@ -1,15 +1,99 @@
-<?php // if user is  logged in, show user dashboard
-if(isset($_SESSION['user_id']) && isset($_SESSION['username'])): ?>
+<?php
+// If itinerary_ids array is already set, unset and create a new one. 
+if(isset($_SESSION['itinerary_ids'])) 
+{
+	unset($_SESSION['itinerary_ids']);
+	
+}
+$_SESSION['itinerary_ids'] = array();
+?>
 
 	<p>Welcome, <?php echo $_SESSION['username']; ?>, to the Social Travel Guide! </p>
-    
+
     <!-- Show a menu that allows user to log out -->
     <ul>
-    	<li><a href="index.php?logout=true">Log out</a></li>
+    	<li><a href="view/new_itinerary.php">Create a new itinerary</a></li>
+    	<li><a href="" onclick="logout(); return false;">Log out</a></li>
     </ul>
-
-<?php else: // otherwise, show log in view
-	// Check if previous login attempt was unsuccessful
-	include "view/login_view.php";?>
+    <!-- Get number of itineraries the user have from the database -->
+    <?php 
+	include("model/itinerary_db.php");
+	$itineraries = get_itineraries($_SESSION['user_id']); // get itinerary details from the database
+	print_r($itineraries);
+	?>
+    <p>You currently have <?php echo(count($itineraries)); ?> 
+    <?php 
+		if(count($itineraries) == 1) 
+		{
+			echo "itinerary.";	
+		} 
+		else 
+		{
+			echo "itineraries.";	
+		}
+	?>
+    </p>
     
-<?php endif; ?>
+<!-- If there are itineraries, show them in table form. Otherwise
+	show a link/button to create a new itinerary	-->
+    <?php if(count($itineraries) > 0): ?>
+    <div id="itinerary_details">
+    	<table id="itinerary_table">
+        	<tr>
+            	<th>Name</th>
+                <th>Description</th>
+                <th>Destination</th>
+                <th>Start date</th>
+                <th>End date</th>
+            </tr>
+        <!-- create a row for each itinerary-->
+        <?php 
+		foreach($itineraries as $row)
+		{
+			echo "<tr>";
+			// Create a column for each detail
+			echo "<td>" . $row['itinerary_name'] . "</td>";
+			echo "<td>" . $row['itinerary_desc'] . "</td>";
+			echo "<td>" . $row['destination'] . "</td>";
+			echo "<td>" . $row['start_date'] . "</td>";
+			echo "<td>" . $row['end_date'] . "</td>";
+			echo "</tr>";
+		}	
+		?>
+        </table>
+    </div>
+    
+    <?php else: ?>
+    
+    <?php endif ?>
+    
+    
+
+<script>
+function create_itinerary(e) 
+{
+	e.preventDefault();
+	$.ajax({
+		url: 'actions.php',
+		type: 'post',
+		data: {'change_state': 'new_itinerary'},
+		success: function(){
+			location.reload();
+		}
+    }); // end ajax call
+}
+
+function logout()
+{
+	//alert("Calling logout");
+	$.ajax({
+		url: 'actions.php',
+		type: 'post',
+		data: {'action': 'logout'},
+		success: function(data){
+			location.reload();
+			//alert(data);
+		}
+    }); // end ajax call
+}
+</script>

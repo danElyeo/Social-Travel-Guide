@@ -13,6 +13,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
 	//print_r($user_info);
 	session_start();
 	
+	// if database checks out, set state to logged_in
 	if(!empty($user_info))
 	{
 		$_SESSION['user_id'] = $user_info['user_id'];
@@ -20,13 +21,13 @@ if(isset($_POST['username']) && isset($_POST['password']))
 		//echo "Session userid: " . $_SESSION['user_id'];
 		//echo "Session username: " . $_SESSION['username'];
 		// Redirect user to the dashboard
-		$_SESSION['state'] = "user_dashboard";
+		//$_SESSION['state'] = "logged_in";
 		//header( 'Location: ../' ) ; // redirect back to index page
 	}
 	else // invalid username or password
 	{
 		//echo "invalid login!";
-		$_SESSION['state'] = "invalid_login";
+		$_SESSION['invalid_login'] = true;
 		//header( 'Location: ../index.php?invalid_login=true' ) ;
 		//$GLOBALS['action'] = "invalid_login";
 		//header( 'Location: ../');

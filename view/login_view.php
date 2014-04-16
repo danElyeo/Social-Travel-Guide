@@ -4,7 +4,8 @@
         <p>To start off, login here to start viewing and planning for your trips!</p>
         
         <?php 
-			if($_SESSION['state'] == "invalid_login")
+			if(isset($_SESSION['invalid_login']) && 
+			$_SESSION['invalid_login'] == true)
 			{
 				echo "<div class='error'>*Invalid username and/or password! Please try again.</div>";		
 			}
@@ -34,9 +35,9 @@
     <script>
 	function open_registration_form() {
 		<?php 
-			$_SESSION['state'] = "register_user";
+			//$_SESSION['state'] = "register_user";
 			//header ("Location: ./");
-			echo "Hello World!";
+			//echo "Hello World!";
 		?>	
 		//window.location.href = "./";
 	}
