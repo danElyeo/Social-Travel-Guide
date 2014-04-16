@@ -100,7 +100,9 @@ function create_itinerary($user_id, $i_name, $i_desc, $i_dest, $i_start, $i_end)
 		// if successful, save the last insert id into the saved itineraries array
 		if($result) 
 		{
-			array_push($_SESSION['itinerary_ids'], $db->lastInsertId());
+			//array_push($_SESSION['itinerary_ids'], $db->lastInsertId());
+			// redirect back to user dashboard
+			header("Location: ../");
 		}
         $statement->closeCursor();
 		

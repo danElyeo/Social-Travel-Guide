@@ -1,11 +1,11 @@
 <?php
 // If itinerary_ids array is already set, unset and create a new one. 
-if(isset($_SESSION['itinerary_ids'])) 
+if(isset($_SESSION['itineraries'])) 
 {
-	unset($_SESSION['itinerary_ids']);
+	unset($_SESSION['itineraries']);
 	
 }
-$_SESSION['itinerary_ids'] = array();
+$_SESSION['itineraries'] = array();
 ?>
 
 	<p>Welcome, <?php echo $_SESSION['username']; ?>, to the Social Travel Guide! </p>
@@ -19,7 +19,8 @@ $_SESSION['itinerary_ids'] = array();
     <?php 
 	include("model/itinerary_db.php");
 	$itineraries = get_itineraries($_SESSION['user_id']); // get itinerary details from the database
-	print_r($itineraries);
+	$_SESSION['itineraries'] = $itineraries;
+	//print_r($itineraries);
 	?>
     <p>You currently have <?php echo(count($itineraries)); ?> 
     <?php 
@@ -38,6 +39,7 @@ $_SESSION['itinerary_ids'] = array();
 	show a link/button to create a new itinerary	-->
     <?php if(count($itineraries) > 0): ?>
     <div id="itinerary_details">
+    	<form action="view/itinerary_details.php" method="post">
     	<table id="itinerary_table">
         	<tr>
             	<th>Name</th>
@@ -57,10 +59,12 @@ $_SESSION['itinerary_ids'] = array();
 			echo "<td>" . $row['destination'] . "</td>";
 			echo "<td>" . $row['start_date'] . "</td>";
 			echo "<td>" . $row['end_date'] . "</td>";
+			echo "<td><button value='" . $row['itinerary_id'] . "'>view</button>";
 			echo "</tr>";
 		}	
 		?>
         </table>
+        </form>
     </div>
     
     <?php else: ?>
@@ -96,4 +100,15 @@ function logout()
 		}
     }); // end ajax call
 }
+
+
+$(document).ready(function() {
+	$("button").click(function(e)
+	{
+		e.preventDefault();
+		
+		$('table').after("<input type='hidden' name='itinerary_id' value="+ this.value +">");	// dynamically creates the input field based on which button is clicked.
+		$('form').submit(); // submits the form
+	});
+});
 </script>
