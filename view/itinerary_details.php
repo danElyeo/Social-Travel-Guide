@@ -41,43 +41,87 @@ if(isset($_POST['itinerary_id']))
            
            	<br>
             <hr>
-            <div id="current_schedule">
+            <div id="schedule">
             	<h3>Current Schedule</h3>
-                <div id="droppable" class="ui-widget-header">
-  					<p>Drop here</p>
+                <div id="schedule_drop"> 
+                	<ul>
+                    </ul>
 				</div>
             </div>
             <div id="activities">
             	<h3>Activities</h3>
-                <ul>
-                	<li><a href="">Create a new activity</a></li>
-                    <li><a href="">Ask your friends for suggestions</a></li>
+                <p>Drag and drop your activities onto your schedule</p>
+                <ul id="activities_pickup">
+                    <li>Eat at Kumos!</li>
+                    <li>Visit Peabody Museum</li>
                 </ul>
-                <!-- Show the current activities table -->
-                <div id="draggable" class="ui-widget-content">
-  					<p>Drag me to my target</p>
-				</div>
 				
             </div>
             </div>
             
-            <script>
-			$("a").click(function(e) {
-				e.preventDefault();
-			});
-			
-			$(function() {
-				$( "#draggable" ).draggable();
-				$( "#droppable" ).droppable({
-				 	drop: function( event, ui ) {
-					$( this )
-					  .addClass( "ui-state-highlight" )
-					  .find( "p" )
-						.html( "Dropped!" );
-				 	}
-				});
-			});
-			</script>
+<script>
+/*$("a").click(function(e) {
+	e.preventDefault();
+});*/
+
+$(function() {
+    // there's the gallery and the trash
+    var activities_pickup= $( "#activities_pickup" ),
+      schedule_drop = $( "#schedule_drop" );
+	  
+	// let the activity items be draggable
+    $( "li", activities_pickup ).draggable({
+      cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+      revert: "invalid", // when not dropped, the item will revert back to its initial position
+      containment: "document",
+      helper: "clone",
+      cursor: "move"
+    });
+	
+	// let the schedule be droppable, accepting the activity items
+    schedule_drop.droppable({
+      accept: "#activities_pickup > li",
+      activeClass: "ui-state-highlight",
+      drop: function( event, ui ) {
+		  //alert(ui.draggable);
+        addActivityToSchedule( ui.draggable );
+      }
+    });
+	
+	// let the activity_pickup be droppable as well, accepting items from the schedule
+    activities_pickup.droppable({
+      accept: "#schedule_drop li",
+      //activeClass: "custom-state-active",
+	  activeClass: "ui-state-highlight",
+      drop: function( event, ui ) {
+        //recycleImage( ui.draggable );
+		removeActivityFromSchedule(ui.draggable);
+      }
+    });
+});
+
+function addActivityToSchedule(dropped_item) {
+	dropped_item.fadeOut(function() 
+	{
+		var list = $( "ul", schedule_drop ).length ?
+		$( "ul", schedule_drop ) :
+		$( "<ul class='ui-helper-reset'/>" ).appendTo(schedule_drop);
+		
+		// Add the item into the ul in schedule drop
+		dropped_item.appendTo(list).fadeIn();
+	});
+}
+
+function removeActivityFromSchedule(dropped_item) {
+	dropped_item.fadeOut(function()
+	{
+		var list = $("#activities_pickup");
+		
+		// Add the item into ul in activities_pickup
+		dropped_item.appendTo(list).fadeIn();
+	});
+}
+</script>
 			
         <?php
 		break; // break the loop, we don't need it anymore
