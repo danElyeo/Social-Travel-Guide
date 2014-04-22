@@ -2,6 +2,9 @@
     
     <div id="login_container">
         <p>To start off, login here to start viewing and planning for your trips!</p>
+        <p style="color:blue";>
+        [For CS601 grading purposes, please use username "admin" and password "password"]
+        </p>
         
         <?php 
 			if(isset($_SESSION['invalid_login']) && 
@@ -32,13 +35,3 @@
         <p>Not a member? Click <a href="view/register_view.php">here</a> to register for free now!</p>
     </div>
     
-    <script>
-	function open_registration_form() {
-		<?php 
-			//$_SESSION['state'] = "register_user";
-			//header ("Location: ./");
-			//echo "Hello World!";
-		?>	
-		//window.location.href = "./";
-	}
-	</script>

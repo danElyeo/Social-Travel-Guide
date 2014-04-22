@@ -10,7 +10,7 @@ if(!isset($_SESSION))
 
 if(isset($_POST['itinerary_id']))
 {
-
+	//echo("Current itinerary id: " . $_POST['itinerary_id']);
     // show the details of only the selected itinerary 
 	//print_r($_SESSION['itineraries']);
 	// Get the row index of the selected itinerary
@@ -43,15 +43,18 @@ if(isset($_POST['itinerary_id']))
             <hr>
             <div id="schedule">
             	<h3>Current Schedule</h3>
-                <div id="schedule_drop"> 
-                	<ul>
+                <div> 
+                	<ul id="schedule_drop" style="min-height:50px; border:1px dotted black";>
                     </ul>
 				</div>
             </div>
             <div id="activities">
             	<h3>Activities</h3>
+                <ul id="activity_menu">
+                	<li><a href="new_activity.php?i_id=<?php echo $_POST['itinerary_id']?>">Create a new activity</a></li>
+                </ul>
                 <p>Drag and drop your activities onto your schedule</p>
-                <ul id="activities_pickup">
+                <ul id="activities_pickup" style="min-height:50px; border:1px dotted black">
                     <li>Eat at Kumos!</li>
                     <li>Visit Peabody Museum</li>
                 </ul>
@@ -59,69 +62,8 @@ if(isset($_POST['itinerary_id']))
             </div>
             </div>
             
-<script>
-/*$("a").click(function(e) {
-	e.preventDefault();
-});*/
 
-$(function() {
-    // there's the gallery and the trash
-    var activities_pickup= $( "#activities_pickup" ),
-      schedule_drop = $( "#schedule_drop" );
-	  
-	// let the activity items be draggable
-    $( "li", activities_pickup ).draggable({
-      cancel: "a.ui-icon", // clicking an icon won't initiate dragging
-      revert: "invalid", // when not dropped, the item will revert back to its initial position
-      containment: "document",
-      helper: "clone",
-      cursor: "move"
-    });
-	
-	// let the schedule be droppable, accepting the activity items
-    schedule_drop.droppable({
-      accept: "#activities_pickup > li",
-      activeClass: "ui-state-highlight",
-      drop: function( event, ui ) {
-		  //alert(ui.draggable);
-        addActivityToSchedule( ui.draggable );
-      }
-    });
-	
-	// let the activity_pickup be droppable as well, accepting items from the schedule
-    activities_pickup.droppable({
-      accept: "#schedule_drop li",
-      //activeClass: "custom-state-active",
-	  activeClass: "ui-state-highlight",
-      drop: function( event, ui ) {
-        //recycleImage( ui.draggable );
-		removeActivityFromSchedule(ui.draggable);
-      }
-    });
-});
 
-function addActivityToSchedule(dropped_item) {
-	dropped_item.fadeOut(function() 
-	{
-		var list = $( "ul", schedule_drop ).length ?
-		$( "ul", schedule_drop ) :
-		$( "<ul class='ui-helper-reset'/>" ).appendTo(schedule_drop);
-		
-		// Add the item into the ul in schedule drop
-		dropped_item.appendTo(list).fadeIn();
-	});
-}
-
-function removeActivityFromSchedule(dropped_item) {
-	dropped_item.fadeOut(function()
-	{
-		var list = $("#activities_pickup");
-		
-		// Add the item into ul in activities_pickup
-		dropped_item.appendTo(list).fadeIn();
-	});
-}
-</script>
 			
         <?php
 		break; // break the loop, we don't need it anymore
@@ -129,6 +71,11 @@ function removeActivityFromSchedule(dropped_item) {
 	}
 }
 ?>
+
+<script src="../js/itinerary_functions.js"></script>
+<script>
+
+</script>
 
 
 <?php include("../view/footer.php"); ?>

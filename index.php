@@ -76,13 +76,6 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['username'])):?>
 <?php endif; */?>
     
 </div>
-
-<script>
-function check_login() {
-	alert("Login button has been clicked");	
-}
-</script>
-
 <?php include("view/footer.php"); ?>
 
 

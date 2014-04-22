@@ -99,4 +99,8 @@ img.megaphone {
 	content:"*";
 	font-weight:bold;
 }
+
+table, tr td:first-child {
+	vertical-align:text-top;
+}
 	
