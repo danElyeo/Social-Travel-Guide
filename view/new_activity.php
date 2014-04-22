@@ -2,10 +2,6 @@
 require_once('../util/main.php');
 include("../view/header.php"); 
 
-if(isset($_GET['i_id']))
-{
-	echo "Current itinerary id: " . $_GET['i_id'];	
-}
 ?>
 
 <div id="create_activity_form" class="main_content_area">
@@ -66,7 +62,6 @@ if(isset($_GET['i_id']))
     <br>
     <div class="left_indent">
      	<input type="hidden" name="action" value="create_activity">
-        <input type="hidden" name="itinerary_id" value="<?php echo $_GET['i_id']?>">   
         <input id="submit_button" type="submit" value="Submit">
         <input type="reset" value="Clear Form">
         <input type="button" value="Back" onClick="redirect_home()">

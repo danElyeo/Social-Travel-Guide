@@ -12,7 +12,7 @@ if(isset($_POST['action']))
 	switch($_POST['action'])
 	{
 		case "create_activity":
-			if(isset($_POST['itinerary_id']) 
+			if(isset($_SESSION['current_itinerary']) 
 			&& isset($_POST['a_name']))
 			//&& isset($_POST['a_desc'])
 			//&& isset($_POST['days'])
@@ -24,7 +24,7 @@ if(isset($_POST['action']))
 			//&& isset($_POST['a_address3']))
 			{
 				create_activity(
-					$_POST['itinerary_id'],
+					$_SESSION['current_itinerary'],
 					$_SESSION['username'], // author
 					$_POST['a_name'],
 					$_POST['a_desc'],
