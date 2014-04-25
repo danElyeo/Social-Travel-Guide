@@ -43,6 +43,14 @@ foreach($_SESSION['itineraries'] as $row)
 	   
 		<br>
 		<hr>
+        <!-- Get activities from the database-->
+        <?php 
+		include("model/activity_db.php");
+		$activities = get_activities($_SESSION['current_itinerary']);
+		//var_dump($activities);
+		
+		?>
+        
 		<div id="schedule">
 			<h3>Current Schedule</h3>
 			<div> 
@@ -57,16 +65,26 @@ foreach($_SESSION['itineraries'] as $row)
 			</ul>
 			<p>Drag and drop your activities onto your schedule</p>
 			<ul id="activities_pickup" style="min-height:50px; border:1px dotted black">
+            	<?php 
+				// Create a row for each activity and add buttons
+				foreach ($activities as $row)
+				{
+					echo "<li a_id='" . $row['activity_id']."' a_name='" . $row['activity_name'] . "'>" . $row['activity_name'];
+					echo "<div class='activity_btns'>";
+					echo "<input type='button' value='update'>";
+					echo "<input type='button' value='delete'>";
+					echo "<input type='button' value='add to Schedule'>";
+					echo "</div>";
+					echo "</li>";	
+				}
+				?>
+                <!--
 				<li>Eat at Kumos!</li>
-				<li>Visit Peabody Museum</li>
+				<li>Visit Peabody Museum</li> -->
 			</ul>
 			
 		</div>
 		</div>
-		
-
-
-		
 	<?php
 	break; // break the loop, we don't need it anymore
 	endif; 
@@ -76,7 +94,40 @@ foreach($_SESSION['itineraries'] as $row)
 
 <script src="../js/itinerary_functions.js"></script>
 <script>
+// for each activity item, add buttons for view/update, delete and add to schedule
+$('#activities_pickup li')
+	//.append("<div class='activity_btns'></div>")
+	.css('border', '1px black solid')
+	.css('line-height', '150%');
+	
+$('.activity_btns')
+	.css('float', 'right')
+	.css('clear', 'right')
+	.css('border', '1px dotted blue');
+	
+$(".activity_btns input[type='button']").on('click', function(e) {
+	//alert('You clicked ' + this.value + ' for ' + $(this).parent().parent().get(0).getAttribute("a_id")); // returns the id of the activity
+	var list = $(this).parent().parent().get(0); // returns the list element
+	
+	switch (this.value) {
+		case "update":
+			// go to update Activity page
+			window.location="./update_activity.php";
+		break;
+		
+		case "delete":
+		alert("Are you sure you want to delete the activity: " + list.getAttribute('a_name') + "?");
+		break;
+		
+		case "add to Schedule":
+		break;	
+	}
+});
 
+/*$('.activity_btns')
+	.css('float', 'right')
+	.css('clear', 'right')
+	.css('border', '1px dotted blue');*/
 </script>
 
 

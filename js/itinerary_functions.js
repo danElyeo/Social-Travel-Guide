@@ -54,3 +54,9 @@ function removeActivityFromSchedule(dropped_item) {
 		dropped_item.appendTo(list).fadeIn();
 	});
 }
+
+/*$(function() {
+	$( "#activities_pickup li" ).accordion({
+	  collapsible: true
+	});
+});*/
