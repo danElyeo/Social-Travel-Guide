@@ -1,11 +1,11 @@
 // JavaScript Document
-$(function() {
-    // there's the gallery and the trash
+/*$(function() {
+    // draggable and droppable components
     var activities_pickup= $( "#activities_pickup" ),
       schedule_drop = $( "#schedule_drop" );
 	  
 	// let the activity items be draggable
-    $( "li", activities_pickup ).draggable({
+    $( "div.header", activities_pickup ).draggable({
       cancel: "a.ui-icon", // clicking an icon won't initiate dragging
       revert: "invalid", // when not dropped, the item will revert back to its initial position
       containment: "document",
@@ -54,9 +54,4 @@ function removeActivityFromSchedule(dropped_item) {
 		dropped_item.appendTo(list).fadeIn();
 	});
 }
-
-/*$(function() {
-	$( "#activities_pickup li" ).accordion({
-	  collapsible: true
-	});
-});*/
+*/

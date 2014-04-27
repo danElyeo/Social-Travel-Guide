@@ -23,7 +23,7 @@ include("../view/header.php");
             	<select name="a_type" id="a_type">
                 	<option value=""></option>
                     <option value="dining">Dining</option>
-                    <option value="accommodaton">Accomodation</option>
+                    <option value="accommodation">Accomodation</option>
                     <option value="attraction">Attraction</option>
                     <option value="scenic drive">Scenic Drive</option>
                     <option value="museum">Museum</option>

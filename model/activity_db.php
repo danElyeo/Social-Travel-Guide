@@ -9,6 +9,7 @@ if(!isset($_SESSION))
 
 if(isset($_POST['action']))
 {
+	//echo "Action is " . $_POST['action'];
 	switch($_POST['action'])
 	{
 		case "create_activity":
@@ -37,7 +38,29 @@ if(isset($_POST['action']))
 					$_POST['a_address3']
 				);
 			}
-		break;	
+		break;
+		
+		case "update_activity":
+			if (isset($_POST['a_id']))
+			{
+				//echo "Updating activity id: " . $_POST['a_id'];
+				update_activity(
+					$_POST['a_id'],
+					//$_SESSION['current_itinerary'],
+					//$_SESSION['username'], // author
+					$_POST['a_name'],
+					$_POST['a_desc'],
+					$_POST['days'],
+					$_POST['hours'],
+					$_POST['mins'],
+					$_POST['a_type'],
+					$_POST['a_address1'],
+					$_POST['a_address2'],
+					$_POST['a_address3']
+				);
+			}
+		break;
+			
 	}
 }
 
@@ -134,3 +157,55 @@ function create_activity(
         display_db_error($e->getMessage());
     }		
 }
+
+function update_activity(
+	$a_id,
+	$a_name,
+	$a_desc,
+	$duration_days,
+	$duration_hours,
+	$duration_mins,
+	$a_type,
+	$address1,
+	$address2,
+	$address3
+){
+	global $db;
+    $query = 'UPDATE activity
+				SET activity_name = :a_name,
+					activity_desc = :a_desc,
+					duration_days = :a_dur_days,
+					duration_hrs  = :a_dur_hrs,
+					duration_mins = :a_dur_mins,
+					activity_type = :a_type,
+					activity_addr1 = :a_addr1,
+					activity_addr2 = :a_addr2,
+					activity_addr3 = :a_addr3
+				WHERE activity_id = :a_id';
+	try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':a_id', $a_id);
+        $statement->bindValue(':a_name', $a_name);
+        $statement->bindValue(':a_desc', $a_desc);
+        $statement->bindValue(':a_dur_days', $duration_days);
+		$statement->bindValue(':a_dur_hrs', $duration_hours);
+		$statement->bindValue(':a_dur_mins', $duration_mins);
+		$statement->bindValue(':a_type', $a_type);
+        $statement->bindValue(':a_addr1', $address1);
+		$statement->bindValue(':a_addr2', $address2);
+		$statement->bindValue(':a_addr3', $address3);
+        
+        $row_count = $statement->execute();
+        $statement->closeCursor();
+        //return $row_count;
+		// If update is successful, return to itinerary details page
+		if($row_count)
+		{
+			header("Location: ../view/itinerary_details.php");
+		}
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+			
