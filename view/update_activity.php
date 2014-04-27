@@ -71,7 +71,7 @@ include("../view/header.php");
      	<input type="hidden" name="action" value="update_activity">
         <input type="hidden" name="a_id" value="<?php echo $_POST['a_id'];?>">
         <input id="update_button" type="submit" value="Update" disabled="true">
-        <input type="button" value="Cancel" onClick="">
+        <input type="button" value="Cancel" onClick="go_back();">
     </div>
 </form>
 </div>
@@ -139,7 +139,12 @@ $(document).ready(function() {
 	<?php endif ?>
 });
 
-
+function go_back()
+{
+	//alert("Go back to previous page");
+	//e.preventDefault();
+	window.location = "itinerary_details.php";	
+}
 </script>
 
 <?php include("../view/footer.php"); ?>

@@ -127,8 +127,13 @@ foreach($_SESSION['itineraries'] as $row)
 					echo "<td>";
 					if($row['duration_days'] != 0)
 					{
-						echo $row['duration_days'] . " days ";
-						//echo "<br>";	
+						echo $row['duration_days'];
+						if ($row['duration_days'] == 1)
+						{
+							echo " day ";
+						} else {
+							echo " days ";	
+						}	
 					}
 					if($row['duration_hrs'] != 0)
 					{

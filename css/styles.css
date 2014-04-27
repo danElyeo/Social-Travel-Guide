@@ -104,4 +104,15 @@ img.megaphone {
 table, tr td:first-child {
 	vertical-align:text-top;
 }
+
+table, tr, td {
+	font-size:0.95em;
+	text-align:left;
+	padding-right:10px;
+	
+}
+
+th {
+	color:maroon;	
+}
 	
