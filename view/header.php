@@ -9,6 +9,9 @@
 <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">-->
 <script src="<?php echo $host . $app_path?>js/jquery-ui-1.10.4/jquery-1.10.2.js"></script>
 <script src="<?php echo $host . $app_path?>js/jquery-ui-1.10.4/ui/jquery-ui.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByKHFIg_YhjM-zQLygRug7U1I1aLb-qjY&sensor=false">
+</script>
+<script src="../js/colorbox-master/jquery.colorbox-min.js"></script>
 </head>
 
 <body>

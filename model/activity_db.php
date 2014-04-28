@@ -1,6 +1,6 @@
 <?php
 // This script handles all functionality for the activiites. 
-
+//print_r($_POST);
 require_once('database.php'); // connect to the database
 if(!isset($_SESSION)) 
 { 
@@ -58,6 +58,15 @@ if(isset($_POST['action']))
 					$_POST['a_address2'],
 					$_POST['a_address3']
 				);
+			}
+		break;
+		
+		case "delete_activity":
+			//echo "Deleting activity id: ";
+			if (isset($_POST['a_id']))
+			{
+				//echo "Deleting activity id: " . $_POST['a_id'];
+				delete_activity($_POST['a_id']);
 			}
 		break;
 			
@@ -207,5 +216,22 @@ function update_activity(
         $error_message = $e->getMessage();
         display_db_error($error_message);
     }
+}
+
+function delete_activity($a_id)
+{
+	global $db;
+    $query = 'DELETE FROM activity WHERE activity_id = :a_id';
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':a_id', $a_id);
+        $row_count = $statement->execute();
+        $statement->closeCursor();
+		//return $row_count;
+        echo $row_count; // returns to ajax call from itinerary_details.php
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }	
 }
 			

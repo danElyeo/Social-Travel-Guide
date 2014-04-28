@@ -58,6 +58,14 @@ foreach($_SESSION['itineraries'] as $row)
 				</ul>
 			</div>
 		</div>
+        <!--
+        <div id="map-canvas" style="width:800; height:600; border:1px solid black;">
+        <a class="fMap" href="" onclick="return false;">View location map </a>
+        </div>-->
+        
+        <!--<a class="fMap" href="" onclick="return false;">View location map </a>-->
+        
+        
         <!-- This hidden form facilitates updating of activities for the update_activity.php page -->
         <form id="activity_update_form" action="update_activity.php" method="post">
             <input type="hidden" name="action" value="update_activity">
@@ -78,7 +86,7 @@ foreach($_SESSION['itineraries'] as $row)
 			<ul id="activity_menu">
 				<li><a href="new_activity.php">Create a new activity</a></li>
 			</ul>
-			<p>Drag and drop your activities onto your schedule</p>
+			
 			<!--<ul id="activities_pickup" style="min-height:50px; border:1px dotted black">-->
             <div id="activities_pickup" class="accordion">
             	<?php 
@@ -121,7 +129,14 @@ foreach($_SESSION['itineraries'] as $row)
 					}
 					else
 					{
-						echo "<td>" . $row['activity_addr1'] . $row['activity_addr2'] . $row['activity_addr3'] . "</td>";
+						echo "<td>" . $row['activity_addr1'] . $row['activity_addr2'] . "<br>" . $row['activity_addr3'];
+						
+						if(!empty($row['activity_addr1']) && !empty($row['activity_addr3'])) {
+							// include the option to view the map if address 1 and/or 3 are populated. Nothing if not.
+							echo "<br><span ><a class='fMap' href='' onclick='getLatLng();' a_name='" .$row['activity_name'] ."' addr1='" .$row['activity_addr1'] ."' addr3='" . $row['activity_addr3'] . "'>view map</a></span>";
+						}
+						
+						echo "</td>";
 					}
 					
 					echo "<td>";
@@ -170,6 +185,7 @@ foreach($_SESSION['itineraries'] as $row)
 	<?php
 	break; // break the loop, we don't need it anymore
 	endif; 
+	
 }
 
 ?>
@@ -234,7 +250,27 @@ $(".activity_btns input[type='button']").on('click', function(e) {
 		break;
 		
 		case "delete":
-		confirm("Are you sure you want to delete the activity: " + list.getAttribute('a_name') + "?");
+		var confirm_delete = confirm("Are you sure you want to delete the activity: " + list.getAttribute('a_name') + "?");
+		if(confirm_delete)
+		{
+			$.ajax({
+				url: '../model/activity_db.php',
+				type: 'POST',
+				data: {	name: 'action',
+						action: 'delete_activity',
+						a_id : list.getAttribute('a_id') 
+				},
+				success: function(data){
+					//location.reload();
+					//alert(data);
+					//console.log("Data returned: " + data);
+					if(data) // 1 is a success
+					{
+						location.reload();
+					}
+				}
+   			}); // end ajax call
+		}
 		break;
 		
 		case "add to Schedule":
@@ -267,7 +303,106 @@ $('td, th')
 
 $('th').css('color', 'maroon');
 
+$('td span').css('vertical-align', 'bottom');
+
 </script>
 
+<script>
+var lat; // to store the return latlng from geocoder
+var lng;
+
+$(document).ready(function () {
+	var clickedLink = $(".fMap");
+	
+	clickedLink.colorbox({
+		html:'<div id="map_canvas_all" style="width:600px; height:450px;"></div>',
+		scrolling:false,
+		width:"600px",
+		height:"470px"
+		//onComplete:function(){ loadScriptGeneral(); }
+	})
+	clickedLink.on("click", function() {
+		//var activityName = $(this).attr('a_name');
+		var address1 = $(this).attr('addr1');
+		var ZIP = $(this).attr('addr3');
+		var full_address = address1 + " " +  ZIP; 
+		//alert("Address: " + full_address);
+		
+		var geocoder = new google.maps.Geocoder();
+		codeAddress(full_address, geocoder);
+	});
+});
+
+function loadScriptGeneral() {
+	console.log("Map script loaded");
+	var script = document.createElement("script");
+	script.type = "text/javascript";
+	script.src = "http://maps.google.com/maps/api/js?sensor=false&callback=initializeGeneral";
+	document.body.appendChild(script);
+};
+
+function initializeGeneral() {
+	//alert("LatLng is " + latlng);
+  /*var imageG = new google.maps.MarkerImage('/media/imgs/google.png',
+      new google.maps.Size(20, 26),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(0, 26)
+  );
+  var shadowG = new google.maps.MarkerImage('/media/imgs/shadow.png',
+      new google.maps.Size(23, 30),
+      new google.maps.Point(0, 0),
+      new google.maps.Point(0, 30)
+  );*/
+	//var myLatlngG = new google.maps.LatLng(35.518421,24.018758);
+	var myLatlngG = new google.maps.LatLng(lat,lng);
+	//alert(myLatlngG);
+  	var myOptionsG = {
+      	zoom: 16,
+		center: myLatlngG,
+      	mapTypeId: google.maps.MapTypeId.ROADMAP
+  	}
+  
+  	var mapG = new google.maps.Map(document.getElementById("map_canvas_all"), myOptionsG);
+	
+	var marker = new google.maps.Marker({
+        map: mapG, 
+        position:myLatlngG
+	});
+	
+ 
+};
+
+function getLatLng()
+{
+	event.preventDefault();
+	//console.log(event.target['addr1']);
+	//geocoder = new google.maps.Geocoder();
+}
+
+function codeAddress(address, geocoder) {
+    //In this case it gets the address from an element on the page, but obviously you  could just pass it to the method instead
+    //var address = document.getElementById("address").value;
+
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        //In this case it creates a marker, but you can get the lat and lng from the location.LatLng
+		//alert(results[0].geometry.location);
+		lat = results[0].geometry.location.lat();
+		lng = results[0].geometry.location.lng();
+		//alert("Lat: " + lat);
+		// show the map here
+		loadScriptGeneral();
+        //map.setCenter(results[0].geometry.location);
+        //var marker = new google.maps.Marker({
+        //    map: map, 
+        //    position: results[0].geometry.location
+		
+        
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+  }
+</script>
 
 <?php include("../view/footer.php"); ?>
