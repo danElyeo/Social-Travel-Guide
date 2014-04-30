@@ -53,9 +53,8 @@ foreach($_SESSION['itineraries'] as $row)
         
 		<div id="schedule">
 			<h3>Current Schedule</h3>
-			<div> 
-				<ul id="schedule_drop" style="min-height:50px; border:1px dotted black";>
-				</ul>
+			<div id="schedule_drop" class="accordion"> 
+				
 			</div>
 		</div>
         <!--
@@ -110,7 +109,7 @@ foreach($_SESSION['itineraries'] as $row)
 					echo "</div>"; // end div class='activity_btns'
 					echo "</div>"; // end div class='header'
 					
-					echo "<div class='content'>";
+					echo "<div class='content' a_id='" . $row['activity_id']."'>";
 					echo "<table><tr>";
 					echo "<th>Description</th>";
 					echo "<th>Author</th>";
@@ -190,7 +189,7 @@ foreach($_SESSION['itineraries'] as $row)
 
 ?>
 
-<script src="../js/itinerary_functions.js"></script>
+<script src="../js/activity_draggable.js"></script>
 <script>
 // save PHP activities into Javascript activities
 var activities = JSON.parse('<?php echo json_encode($activities,JSON_HEX_TAG|JSON_HEX_APOS); ?>');
@@ -274,6 +273,42 @@ $(".activity_btns input[type='button']").on('click', function(e) {
 		break;
 		
 		case "add to Schedule":
+		$.ajax({
+				url: '../model/activity_db.php',
+				type: 'POST',
+				data: {	name: 'action',
+						action: 'add_to_schedule',
+						a_id : list.getAttribute('a_id') 
+				},
+				success: function(data){
+					//location.reload();
+					//alert(data);
+					//console.log("Data returned: " + data);
+					if(data) // 1 is a success
+					{
+						//location.reload();
+						// move activity to schedule list
+						$('#activities_pickup div.header').each(function() {
+							if($(this).attr('a_id') == list.getAttribute('a_id')) {
+								$(this).hide();	
+							}
+						});
+					}
+				}
+   			}); // end ajax call
+			
+		$('#activities_pickup div.header').each(function() {
+			//console.log("Activity ID is " + $(this).attr('a_id'));
+			if($(this).attr('a_id') == list.getAttribute('a_id')) {
+				$('#schedule_drop').append($(this));
+				
+				$('#activities_pickup div.content').each(function() {
+					if($(this).attr('a_id') == list.getAttribute('a_id')) {
+						$('#schedule_drop').append($(this));
+					}
+				});
+			}
+		});
 		break;	
 	}
 	
@@ -308,40 +343,58 @@ $('td span').css('vertical-align', 'bottom');
 </script>
 
 <script>
-var lat; // to store the return latlng from geocoder
-var lng;
+// Google maps popup code
+//var lat; // to store the return latlng from geocoder
+//var lng;
+//var full_address;
+//var geocoder;
+//var mapG;
+//loadScriptGeneral();
 
 $(document).ready(function () {
+	
+	
 	var clickedLink = $(".fMap");
 	
 	clickedLink.colorbox({
 		html:'<div id="map_canvas_all" style="width:600px; height:450px;"></div>',
 		scrolling:false,
 		width:"600px",
-		height:"470px"
-		//onComplete:function(){ loadScriptGeneral(); }
+		height:"470px",
+		onComplete:function(){
+			//alert("Only called once!");
+			var address1 = $(this).attr('addr1');
+			var ZIP = $(this).attr('addr3');
+			full_address = address1 + " " +  ZIP; 
+			//alert("Address: " + full_address);
+			initializeGeneral(full_address);	
+		}
 	})
-	clickedLink.on("click", function() {
+	/*clickedLink.on("click", function() {
 		//var activityName = $(this).attr('a_name');
 		var address1 = $(this).attr('addr1');
 		var ZIP = $(this).attr('addr3');
-		var full_address = address1 + " " +  ZIP; 
+		full_address = address1 + " " +  ZIP; 
 		//alert("Address: " + full_address);
+		initializeGeneral(full_address);
 		
-		var geocoder = new google.maps.Geocoder();
-		codeAddress(full_address, geocoder);
-	});
+		//var geocoder = new google.maps.Geocoder();
+		//codeAddress(full_address, geocoder);
+	});*/
+	
+	
 });
 
-function loadScriptGeneral() {
+/*function loadScriptGeneral() {
 	console.log("Map script loaded");
 	var script = document.createElement("script");
 	script.type = "text/javascript";
-	script.src = "http://maps.google.com/maps/api/js?sensor=false&callback=initializeGeneral";
+	//script.src = "http://maps.google.com/maps/api/js?sensor=false&callback=initializeGeneral";
+	script.src = "http://maps.google.com/maps/api/js?sensor=false";
 	document.body.appendChild(script);
 };
-
-function initializeGeneral() {
+*/
+function initializeGeneral(full_address) {
 	//alert("LatLng is " + latlng);
   /*var imageG = new google.maps.MarkerImage('/media/imgs/google.png',
       new google.maps.Size(20, 26),
@@ -353,23 +406,11 @@ function initializeGeneral() {
       new google.maps.Point(0, 0),
       new google.maps.Point(0, 30)
   );*/
-	//var myLatlngG = new google.maps.LatLng(35.518421,24.018758);
-	var myLatlngG = new google.maps.LatLng(lat,lng);
-	//alert(myLatlngG);
-  	var myOptionsG = {
-      	zoom: 16,
-		center: myLatlngG,
-      	mapTypeId: google.maps.MapTypeId.ROADMAP
-  	}
+  	// get the geocode for the full addresss
+	var geocoder = new google.maps.Geocoder();
+	codeAddress(full_address, geocoder);
   
-  	var mapG = new google.maps.Map(document.getElementById("map_canvas_all"), myOptionsG);
-	
-	var marker = new google.maps.Marker({
-        map: mapG, 
-        position:myLatlngG
-	});
-	
- 
+	//var myLatlngG = new google.maps.LatLng(35.518421,24.018758)
 };
 
 function getLatLng()
@@ -387,15 +428,44 @@ function codeAddress(address, geocoder) {
       if (status == google.maps.GeocoderStatus.OK) {
         //In this case it creates a marker, but you can get the lat and lng from the location.LatLng
 		//alert(results[0].geometry.location);
-		lat = results[0].geometry.location.lat();
-		lng = results[0].geometry.location.lng();
+		var lat = results[0].geometry.location.lat();
+		var lng = results[0].geometry.location.lng();
 		//alert("Lat: " + lat);
 		// show the map here
-		loadScriptGeneral();
+		//loadScriptGeneral();
         //map.setCenter(results[0].geometry.location);
         //var marker = new google.maps.Marker({
         //    map: map, 
         //    position: results[0].geometry.location
+		var myLatlngG = new google.maps.LatLng(lat,lng);
+		//alert(myLatlngG);
+		var myOptionsG = {
+			zoom: 16,
+			center: myLatlngG,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		}
+	  
+	  	//if(mapG != null)
+		//{
+		var mapG = new google.maps.Map(document.getElementById("map_canvas_all"), myOptionsG);
+		//}
+		
+		var marker = new google.maps.Marker({
+			map: mapG, 
+			position:myLatlngG
+		});
+		
+		$('#map_canvas_all').on('shown', function () {
+       	 	google.maps.event.trigger(mapG, "resize");
+		 	mapG.setCenter(myLatLng);
+   	 	});
+		
+		//google.maps.event.trigger(map,G 'resize');
+
+		// Recenter the map now that it's been redrawn               
+		//var reCenter = new google.maps.LatLng(lat, lng);
+		//mapG.setCenter(reCenter);
+		
 		
         
       } else {

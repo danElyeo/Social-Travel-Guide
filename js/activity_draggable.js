@@ -15,17 +15,20 @@
 	
 	// let the schedule be droppable, accepting the activity items
     schedule_drop.droppable({
-      accept: "#activities_pickup li",
+      accept: "#activities_pickup div.header",
       activeClass: "ui-state-highlight",
       drop: function( event, ui ) {
-		  //alert(ui.draggable);
+		  alert(ui.draggable);
         addActivityToSchedule( ui.draggable );
+		
+		// move content over to schedule as well
+		//$('div.content[a_id=""]', activities_pickup).
       }
     });
 	
 	// let the activity_pickup be droppable as well, accepting items from the schedule
     activities_pickup.droppable({
-      accept: "#schedule_drop li",
+      accept: "#schedule_drop ",
       //activeClass: "custom-state-active",
 	  activeClass: "ui-state-highlight",
       drop: function( event, ui ) {
@@ -53,5 +56,5 @@ function removeActivityFromSchedule(dropped_item) {
 		// Add the item into ul in activities_pickup
 		dropped_item.appendTo(list).fadeIn();
 	});
-}
-*/
+}*/
+
