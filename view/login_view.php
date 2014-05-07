@@ -2,9 +2,9 @@
     
     <div id="login_container">
         <p>To start off, login here to start viewing and planning for your trips!</p>
-        <!--<p style="color:blue";>
-        [For CS601 grading purposes, please use username "admin" and password "password"]
-        </p>-->
+        <p style="color:blue";>
+        [For CS601 grading purposes, please use username "grader" and password "givemeanA"]
+        </p>
         
         <?php 
 			if(isset($_SESSION['invalid_login']) && 
