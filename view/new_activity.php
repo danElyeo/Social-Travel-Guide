@@ -64,7 +64,7 @@ include("../view/header.php");
      	<input type="hidden" name="action" value="create_activity">
         <input id="submit_button" type="submit" value="Submit">
         <input type="reset" value="Clear Form">
-        <input type="button" value="Back" onClick="redirect_home()">
+        <input type="button" value="Back" onClick="go_back()">
     </div>
 </form>
 </div>
@@ -99,6 +99,11 @@ $(document).ready(function() {
 		$('#mins').append('<option value=' + m*15 + '>' + m*15 + '</option>');
 	}
 });
+
+function go_back() {
+	
+	window.location = "itinerary_details.php";
+}
 
 
 </script>

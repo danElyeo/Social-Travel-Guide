@@ -39,7 +39,7 @@ $_SESSION['itineraries'] = array();
 	show a link/button to create a new itinerary	-->
     <?php if(count($itineraries) > 0): ?>
     <div id="itinerary_details">
-    	<form action="view/itinerary_details.php" method="post">
+    	<form action="" method="post"><!-- form action to be set by javascript -->
     	<table id="itinerary_table">
         	<tr>
             	<th>Name</th>
@@ -59,33 +59,25 @@ $_SESSION['itineraries'] = array();
 			echo "<td>" . $row['destination'] . "</td>";
 			echo "<td>" . $row['start_date'] . "</td>";
 			echo "<td>" . $row['end_date'] . "</td>";
-			echo "<td><button value='" . $row['itinerary_id'] . "'>view</button>";
 			echo "</tr>";
-		}	
+			echo "<tr>";
+			echo "<td colspan='5'><button id='view_btn' value='" . $row['itinerary_id'] . "'>view</button>
+			<button id='update_btn' value='" . $row['itinerary_id'] . "'>update</button>
+			<button id='share_btn' value='" . $row['itinerary_id'] . "'>share</button>
+			<button id='delete_btn' value='" . $row['itinerary_id'] . "'>delete</button><hr></td>";
+			echo "</tr>";
+		}
 		?>
         </table>
+        <input id="i_id" type="hidden" name="itinerary_id" value="">
         </form>
     </div>
     
-    <?php else: ?>
-    
-    <?php endif ?>
+    <?php endif; ?>
     
     
 
 <script>
-function create_itinerary(e) 
-{
-	e.preventDefault();
-	$.ajax({
-		url: 'actions.php',
-		type: 'post',
-		data: {'change_state': 'new_itinerary'},
-		success: function(){
-			location.reload();
-		}
-    }); // end ajax call
-}
 
 function logout()
 {
@@ -106,9 +98,66 @@ $(document).ready(function() {
 	$("button").click(function(e)
 	{
 		e.preventDefault();
+		// Set the selected itinerary id
+		$('#i_id').val(this.value);
+		//console.log(e.target.id);
+		switch(e.target.id)
+		{
+			case "view_btn":
+				$('form').attr("action", "view/itinerary_details.php")
+					.submit();
+			break;
+			
+			case "update_btn":
+			$('form').attr("action", "view/update_itinerary.php")
+					.submit();
+			break;
+			
+			case "share_btn":
+			//alert("Sharing feature is coming soon! Stay tuned!");
+			//alert(e.target);
+			//var sharebtn = e.target;
+			$.colorbox({
+				html:'<div style="width:600px; height:450px;">Hello Colorbox</div>',
+				scrolling:false,
+				width:"600px",
+				height:"470px",
+				onComplete:function(){
+					alert("Only called once!");
+					//var address1 = $(this).attr('addr1');
+					//var ZIP = $(this).attr('addr3');
+					//full_address = address1 + " " +  ZIP; 
+					//alert("Address: " + full_address);
+					//initializeGeneral(full_address);	
+				}
+			})
+			break;
+			
+			case "delete_btn":
+				var confirm_delete = confirm("Warning! This action will permanently delete this itinerary, including ALL its activities. Are you sure you want to do this?");
+				if(confirm_delete)
+				{
+					$.ajax({
+						url: 'model/itinerary_db.php',
+						type: 'POST',
+						data: {	name: 'action',
+								action: 'delete_itinerary',
+								i_id : this.value
+						},
+						success: function(data){
+							//location.reload();
+							//alert(data);
+							//console.log("Data returned: " + data);
+							if(data) // 1 is a success
+							{
+								location.reload();
+							}
+						}
+					}); // end ajax call	
+				}
+			break;	
+		}
 		
-		$('table').after("<input type='hidden' name='itinerary_id' value="+ this.value +">");	// dynamically creates the input field based on which button is clicked.
-		$('form').submit(); // submits the form
 	});
 });
 </script>

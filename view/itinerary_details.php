@@ -443,7 +443,7 @@ $(function() {
 
 $('#activities_pickup table tr td:first-child').css('width', '15em');
 
-$('td, th')
+$('.accordion td, .accordion th')
 	.css('font-size', '0.75em')
 	.css('text-align','left')
 	.css('padding-right', '10px')
@@ -509,17 +509,7 @@ $(document).ready(function () {
 };
 */
 function initializeGeneral(full_address) {
-	//alert("LatLng is " + latlng);
-  /*var imageG = new google.maps.MarkerImage('/media/imgs/google.png',
-      new google.maps.Size(20, 26),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(0, 26)
-  );
-  var shadowG = new google.maps.MarkerImage('/media/imgs/shadow.png',
-      new google.maps.Size(23, 30),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(0, 30)
-  );*/
+	
   	// get the geocode for the full addresss
 	var geocoder = new google.maps.Geocoder();
 	codeAddress(full_address, geocoder);
@@ -544,13 +534,7 @@ function codeAddress(address, geocoder) {
 		//alert(results[0].geometry.location);
 		var lat = results[0].geometry.location.lat();
 		var lng = results[0].geometry.location.lng();
-		//alert("Lat: " + lat);
-		// show the map here
-		//loadScriptGeneral();
-        //map.setCenter(results[0].geometry.location);
-        //var marker = new google.maps.Marker({
-        //    map: map, 
-        //    position: results[0].geometry.location
+		
 		var myLatlngG = new google.maps.LatLng(lat,lng);
 		//alert(myLatlngG);
 		var myOptionsG = {
@@ -573,15 +557,6 @@ function codeAddress(address, geocoder) {
        	 	google.maps.event.trigger(mapG, "resize");
 		 	mapG.setCenter(myLatLng);
    	 	});
-		
-		//google.maps.event.trigger(map,G 'resize');
-
-		// Recenter the map now that it's been redrawn               
-		//var reCenter = new google.maps.LatLng(lat, lng);
-		//mapG.setCenter(reCenter);
-		
-		
-        
       } else {
         alert("Geocode was not successful for the following reason: " + status);
       }

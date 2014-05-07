@@ -114,6 +114,7 @@ table, tr td:first-child {
 }
 
 table, tr, td {
+	vertical-align:text-top;
 	font-size:0.95em;
 	text-align:left;
 	padding-right:10px;
