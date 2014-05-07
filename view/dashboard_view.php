@@ -75,8 +75,14 @@ $_SESSION['itineraries'] = array();
     
     <?php endif; ?>
     
-    
-
+	<div id="share_dialog" title="Sharing your itinerary">
+        <p>To share your itinerary and ask your friends for suggestions, simply copy the text block below. You may paste the text block in an email or on a Facebook post. The link will direct your friends to a special page that allows them to view your itinerary add suggestions. Happy planning!</p>
+        <div id="textblock" style="border:1px solid black; padding:10px;">
+        	<p>Hello friend!</p>
+            <p id="custom_text"></p>
+            <p id="custom_link"></p>
+        </div>
+	</div>
 <script>
 
 function logout()
@@ -93,8 +99,46 @@ function logout()
     }); // end ajax call
 }
 
+function get_destination(i_id)
+{
+	$.ajax({
+		url: 'model/itinerary_db.php',
+		type: 'post',
+		data: {
+			'i_id': i_id, 
+			'action':'get_destination'
+		},
+		success: function(data){
+			//location.reload();
+			//alert(data);
+			//return data;
+			$('#custom_text').html("I am planning to travel to " + data + " soon and I would appreciate any suggestions you have about that place. What are some nice places to see and fun things to do? Click on the link below to view my itinerary and add your tips! Thanks!");
+			
+			$('#custom_link').html("http://localhost/cs601/project/friend/view_itinerary.php?i_id=" + i_id)
+		}
+    }); // end ajax call	
+}
+
 
 $(document).ready(function() {
+	$( "#share_dialog" ).dialog({
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 500
+      },
+      hide: {
+        effect: "fade",
+        duration: 500
+      },
+	  model:true,
+	  width:600
+    }).css("font-size", "0.75em");
+ 
+    $( "#share_btn" ).click(function() {
+      $( "#share_dialog" ).dialog( "open" );
+    });
+	
 	$("button").click(function(e)
 	{
 		e.preventDefault();
@@ -116,21 +160,7 @@ $(document).ready(function() {
 			case "share_btn":
 			//alert("Sharing feature is coming soon! Stay tuned!");
 			//alert(e.target);
-			//var sharebtn = e.target;
-			$.colorbox({
-				html:'<div style="width:600px; height:450px;">Hello Colorbox</div>',
-				scrolling:false,
-				width:"600px",
-				height:"470px",
-				onComplete:function(){
-					alert("Only called once!");
-					//var address1 = $(this).attr('addr1');
-					//var ZIP = $(this).attr('addr3');
-					//full_address = address1 + " " +  ZIP; 
-					//alert("Address: " + full_address);
-					//initializeGeneral(full_address);	
-				}
-			})
+			var destination = get_destination(this.value);
 			break;
 			
 			case "delete_btn":

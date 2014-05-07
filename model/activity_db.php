@@ -15,14 +15,6 @@ if(isset($_POST['action']))
 		case "create_activity":
 			if(isset($_SESSION['current_itinerary']) 
 			&& isset($_POST['a_name']))
-			//&& isset($_POST['a_desc'])
-			//&& isset($_POST['days'])
-			//&& isset($_POST['hrs'])
-			//&& isset($_POST['mins'])
-			//&& isset($_POST['a_type'])
-			//&& isset($_POST['a_address1'])
-			//&& isset($_POST['a_address2'])
-			//&& isset($_POST['a_address3']))
 			{
 				create_activity(
 					$_SESSION['current_itinerary'],
@@ -37,6 +29,37 @@ if(isset($_POST['action']))
 					$_POST['a_address2'],
 					$_POST['a_address3']
 				);
+			}
+		break;
+		
+		// same as create_activity except this is added by friends
+		case "add_suggestion": 
+			echo $_POST['i_id'].", ".
+					$_POST['author'].", ". // author
+					$_POST['a_name'].", ".
+					$_POST['a_desc'].", ".
+					$_POST['days'].", ".
+					$_POST['hours'].", ".
+					$_POST['mins'].", ".
+					$_POST['a_type'].", ".
+					$_POST['a_address1'].", ".
+					$_POST['a_address2'].", ".
+					$_POST['a_address3'];
+			if(isset($_POST['i_id']) && isset($_POST['author']))
+			{
+				create_activity(
+					$_POST['i_id'],
+					$_POST['author'], // author
+					$_POST['a_name'],
+					$_POST['a_desc'],
+					$_POST['days'],
+					$_POST['hours'],
+					$_POST['mins'],
+					$_POST['a_type'],
+					$_POST['a_address1'],
+					$_POST['a_address2'],
+					$_POST['a_address3']
+				);	
 			}
 		break;
 		
@@ -170,7 +193,17 @@ function create_activity(
 		{
 			//array_push($_SESSION['itinerary_ids'], $db->lastInsertId());
 			// redirect back to itinerary details page
-			header("Location: ../view/itinerary_details.php");
+			if(isset($_SESSION['user_id']))
+			{
+				// came from user
+				header("Location: ../view/itinerary_details.php");
+			}
+			else
+			{
+				// came from friend
+				header("Location: ../friend/view_itinerary.php?i_id=".$itinerary_id);	
+			}
+			
 		}
         $statement->closeCursor();
 		

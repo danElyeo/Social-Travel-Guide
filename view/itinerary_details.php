@@ -259,7 +259,6 @@ foreach($_SESSION['itineraries'] as $row)
 
 ?>
 
-<script src="../js/activity_draggable.js"></script>
 <script>
 // save PHP activities into Javascript activities
 var activities = JSON.parse('<?php echo json_encode($activities,JSON_HEX_TAG|JSON_HEX_APOS); ?>');

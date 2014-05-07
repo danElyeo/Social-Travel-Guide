@@ -61,7 +61,53 @@ if(isset($_POST['action']))
 			delete_itinerary($_POST['i_id']);
 		}
 		break;
+		
+		case "get_destination":
+		if(isset($_POST['i_id'])) 
+		{
+			get_destination($_POST['i_id']);
+		}
+		break;
 	}
+}
+
+// Retrieves the details of an itinerary
+function get_details($i_id)
+{
+	global $db;
+    $query = 'SELECT * FROM itinerary
+              WHERE itinerary_id = :i_id'
+			  ;
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':i_id', $i_id);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        $statement->closeCursor();
+		
+		return $result;	
+    } catch (PDOException $e) {
+        display_db_error($e->getMessage());
+    }
+}
+
+function get_destination($i_id)
+{
+	global $db;
+    $query = 'SELECT destination FROM itinerary
+              WHERE itinerary_id = :i_id'
+			  ;
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':i_id', $i_id);
+        $statement->execute();
+        $result = $statement->fetch();
+        $statement->closeCursor();
+		
+		echo $result[0];	
+    } catch (PDOException $e) {
+        display_db_error($e->getMessage());
+    }	
 }
 
 // Retrieves the current number of itineraries the user has
