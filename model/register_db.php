@@ -15,8 +15,6 @@ if( isset($_POST['first_name']) &&
 	isset($_POST['r_password']) &&
 	isset($_POST['email']))
 {
-	// TODO: use JavaScript to check if password and r_password are the same before proceeding!
-	// TODO: prevent user from registering if username already exist!	
 	$first_name = $_POST['first_name'];
 	$last_name = $_POST['last_name'];
 	$username = $_POST['username'];
@@ -106,6 +104,8 @@ function register_user($first, $last, $user, $pass, $email)
 	global $host;
 	global $app_path;
 	
+	$password = sha1($pass);
+	
     $query = 'INSERT INTO user (
 				first_name,
 				last_name,
@@ -123,7 +123,7 @@ function register_user($first, $last, $user, $pass, $email)
 		$statement->bindValue(':first_name', $first);
 		$statement->bindValue(':last_name', $last);
         $statement->bindValue(':username', $user);
-		$statement->bindValue(':password', $pass);
+		$statement->bindValue(':password', $password);
 		$statement->bindValue(':email', $email);
         $result = $statement->execute(); // returns true or false;
         //$result = $statement->fetch();

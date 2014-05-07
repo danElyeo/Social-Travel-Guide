@@ -54,7 +54,84 @@ foreach($_SESSION['itineraries'] as $row)
 		<div id="schedule">
 			<h3>Current Schedule</h3>
 			<div id="schedule_drop" class="accordion"> 
-				
+				<?php 
+				// Create a row for each activity and add buttons
+				foreach ($activities as $row)
+				{
+					if($row['in_schedule'] == 1) {
+						echo "<div class='header' a_id='" . $row['activity_id']."' a_name='" . $row['activity_name'] . "'>" . $row['activity_name'];
+						echo "<div class='activity_btns'>";
+						echo "<input type='button' value='update'>";
+						echo "<input type='button' value='delete'>";
+						echo "<input class='removeSchedule'type='button' value='remove from Schedule'>";
+						echo "</div>"; // end div class='activity_btns'
+						echo "</div>"; // end div class='header'
+						
+						echo "<div class='content' a_id='" . $row['activity_id']."'>";
+						echo "<table><tr>";
+						echo "<th>Description</th>";
+						echo "<th>Author</th>";
+						echo "<th>Type</th>";
+						echo "<th>Address</th>";
+						echo "<th>Duration</th>";
+						echo "</tr>";
+						echo "<tr>";
+						echo "<td>" . $row['activity_desc'] . "</td>";
+						echo "<td>" . $row['author'] . "</td>";
+						echo "<td>" . $row['activity_type'] . "</td>";
+						
+						if(empty($row['activity_addr1']) && empty($row['activity_addr2']) && empty($row['activity_addr1']))
+						{
+							echo "<td>-</td>"; 	
+						}
+						else
+						{
+							echo "<td>" . $row['activity_addr1'] . $row['activity_addr2'] . "<br>" . $row['activity_addr3'];
+							
+							if(!empty($row['activity_addr1']) && !empty($row['activity_addr3'])) {
+								// include the option to view the map if address 1 and/or 3 are populated. Nothing if not.
+								echo "<br><span ><a class='fMap' href='' onclick='getLatLng();' a_name='" .$row['activity_name'] ."' addr1='" .$row['activity_addr1'] ."' addr3='" . $row['activity_addr3'] . "'>view map</a></span>";
+							}
+							
+							echo "</td>";
+						}
+						
+						echo "<td>";
+						if($row['duration_days'] != 0)
+						{
+							echo $row['duration_days'];
+							if ($row['duration_days'] == 1)
+							{
+								echo " day ";
+							} else {
+								echo " days ";	
+							}	
+						}
+						if($row['duration_hrs'] != 0)
+						{
+							echo $row['duration_hrs'];
+							if ($row['duration_hrs'] == 1)
+							{
+								echo " hour ";
+							} else {
+								echo " hours ";	
+							}
+						}
+						if($row['duration_mins'] != 0)
+						{
+							echo $row['duration_mins'] . " mins";
+							//echo "<br>";	
+						}
+						if($row['duration_days'] == 0 && $row['duration_hrs'] == 0 && $row['duration_mins'] == 0)
+						{
+							echo "-";	
+						}
+						echo "</td>";
+						echo "</tr></table>";
+						echo "</div>"; // end div class='content';
+					}// end if in_schedule is 0;
+				}
+				?>
 			</div>
 		</div>
         <!--
@@ -82,7 +159,7 @@ foreach($_SESSION['itineraries'] as $row)
         </form>
 		<div id="activities">
 			<h3>Activities</h3>
-			<ul id="activity_menu">
+			<ul id="activity_menu" style="list-style-type:none">
 				<li><a href="new_activity.php">Create a new activity</a></li>
 			</ul>
 			
@@ -92,85 +169,78 @@ foreach($_SESSION['itineraries'] as $row)
 				// Create a row for each activity and add buttons
 				foreach ($activities as $row)
 				{
-					// used with ul instead of div
-					/*echo "<li a_id='" . $row['activity_id']."' a_name='" . $row['activity_name'] . "'>" . $row['activity_name'];
-					echo "<div class='activity_btns'>";
-					echo "<input type='button' value='update'>";
-					echo "<input type='button' value='delete'>";
-					echo "<input type='button' value='add to Schedule'>";
-					echo "</div>";
-					echo "</li>";	*/
-					
-					echo "<div class='header' a_id='" . $row['activity_id']."' a_name='" . $row['activity_name'] . "'>" . $row['activity_name'];
-					echo "<div class='activity_btns'>";
-					echo "<input type='button' value='update'>";
-					echo "<input type='button' value='delete'>";
-					echo "<input type='button' value='add to Schedule'>";
-					echo "</div>"; // end div class='activity_btns'
-					echo "</div>"; // end div class='header'
-					
-					echo "<div class='content' a_id='" . $row['activity_id']."'>";
-					echo "<table><tr>";
-					echo "<th>Description</th>";
-					echo "<th>Author</th>";
-					echo "<th>Type</th>";
-					echo "<th>Address</th>";
-					echo "<th>Duration</th>";
-					echo "</tr>";
-					echo "<tr>";
-					echo "<td>" . $row['activity_desc'] . "</td>";
-					echo "<td>" . $row['author'] . "</td>";
-					echo "<td>" . $row['activity_type'] . "</td>";
-					
-					if(empty($row['activity_addr1']) && empty($row['activity_addr2']) && empty($row['activity_addr1']))
-					{
-						echo "<td>-</td>"; 	
-					}
-					else
-					{
-						echo "<td>" . $row['activity_addr1'] . $row['activity_addr2'] . "<br>" . $row['activity_addr3'];
+					if($row['in_schedule'] == 0) {
+						echo "<div class='header' a_id='" . $row['activity_id']."' a_name='" . $row['activity_name'] . "'>" . $row['activity_name'];
+						echo "<div class='activity_btns'>";
+						echo "<input type='button' value='update'>";
+						echo "<input type='button' value='delete'>";
+						echo "<input class='addSchedule' type='button' value='add to Schedule'>";
+						echo "</div>"; // end div class='activity_btns'
+						echo "</div>"; // end div class='header'
 						
-						if(!empty($row['activity_addr1']) && !empty($row['activity_addr3'])) {
-							// include the option to view the map if address 1 and/or 3 are populated. Nothing if not.
-							echo "<br><span ><a class='fMap' href='' onclick='getLatLng();' a_name='" .$row['activity_name'] ."' addr1='" .$row['activity_addr1'] ."' addr3='" . $row['activity_addr3'] . "'>view map</a></span>";
+						echo "<div class='content' a_id='" . $row['activity_id']."'>";
+						echo "<table><tr>";
+						echo "<th>Description</th>";
+						echo "<th>Author</th>";
+						echo "<th>Type</th>";
+						echo "<th>Address</th>";
+						echo "<th>Duration</th>";
+						echo "</tr>";
+						echo "<tr>";
+						echo "<td>" . $row['activity_desc'] . "</td>";
+						echo "<td>" . $row['author'] . "</td>";
+						echo "<td>" . $row['activity_type'] . "</td>";
+						
+						if(empty($row['activity_addr1']) && empty($row['activity_addr2']) && empty($row['activity_addr1']))
+						{
+							echo "<td>-</td>"; 	
+						}
+						else
+						{
+							echo "<td>" . $row['activity_addr1'] . $row['activity_addr2'] . "<br>" . $row['activity_addr3'];
+							
+							if(!empty($row['activity_addr1']) && !empty($row['activity_addr3'])) {
+								// include the option to view the map if address 1 and/or 3 are populated. Nothing if not.
+								echo "<br><span ><a class='fMap' href='' onclick='getLatLng();' a_name='" .$row['activity_name'] ."' addr1='" .$row['activity_addr1'] ."' addr3='" . $row['activity_addr3'] . "'>view map</a></span>";
+							}
+							
+							echo "</td>";
 						}
 						
+						echo "<td>";
+						if($row['duration_days'] != 0)
+						{
+							echo $row['duration_days'];
+							if ($row['duration_days'] == 1)
+							{
+								echo " day ";
+							} else {
+								echo " days ";	
+							}	
+						}
+						if($row['duration_hrs'] != 0)
+						{
+							echo $row['duration_hrs'];
+							if ($row['duration_hrs'] == 1)
+							{
+								echo " hour ";
+							} else {
+								echo " hours ";	
+							}
+						}
+						if($row['duration_mins'] != 0)
+						{
+							echo $row['duration_mins'] . " mins";
+							//echo "<br>";	
+						}
+						if($row['duration_days'] == 0 && $row['duration_hrs'] == 0 && $row['duration_mins'] == 0)
+						{
+							echo "-";	
+						}
 						echo "</td>";
-					}
-					
-					echo "<td>";
-					if($row['duration_days'] != 0)
-					{
-						echo $row['duration_days'];
-						if ($row['duration_days'] == 1)
-						{
-							echo " day ";
-						} else {
-							echo " days ";	
-						}	
-					}
-					if($row['duration_hrs'] != 0)
-					{
-						echo $row['duration_hrs'];
-						if ($row['duration_hrs'] == 1)
-						{
-							echo " hour ";
-						} else {
-							echo " hours ";	
-						}
-					}
-					if($row['duration_mins'] != 0)
-					{
-						echo $row['duration_mins'] . " mins";
-						//echo "<br>";	
-					}
-					if($row['duration_days'] == 0 && $row['duration_hrs'] == 0 && $row['duration_mins'] == 0)
-					{
-						echo "-";	
-					}
-					echo "</td>";
-					echo "</tr></table>";
-					echo "</div>"; // end div class='content';
+						echo "</tr></table>";
+						echo "</div>"; // end div class='content';
+					}// end if in_schedule is 0;
 				}
 				?>
                 <!--
@@ -282,34 +352,78 @@ $(".activity_btns input[type='button']").on('click', function(e) {
 				},
 				success: function(data){
 					//location.reload();
-					//alert(data);
+					//alert("Added to schedule");
 					//console.log("Data returned: " + data);
 					if(data) // 1 is a success
 					{
 						//location.reload();
 						// move activity to schedule list
-						$('#activities_pickup div.header').each(function() {
+						$('div.header').each(function() {
+							//console.log("Activity ID is " + $(this).attr('a_id'));
 							if($(this).attr('a_id') == list.getAttribute('a_id')) {
-								$(this).hide();	
+								$('#schedule_drop').append($(this));
+								// Change add to Schedule button to remove from Schedule
+								$(this).find('input.addSchedule')
+								.val('remove from Schedule')
+								.removeClass('addSchedule')
+								.addClass('removeSchedule');
+								
+								// Append the corresponding content block to the Schedule as well
+								$('div.content').each(function() {
+									if($(this).attr('a_id') == list.getAttribute('a_id')) {
+										$('#schedule_drop').append($(this));
+									}
+								});
+								
+								
 							}
 						});
 					}
 				}
    			}); // end ajax call
-			
-		$('#activities_pickup div.header').each(function() {
-			//console.log("Activity ID is " + $(this).attr('a_id'));
-			if($(this).attr('a_id') == list.getAttribute('a_id')) {
-				$('#schedule_drop').append($(this));
-				
-				$('#activities_pickup div.content').each(function() {
-					if($(this).attr('a_id') == list.getAttribute('a_id')) {
-						$('#schedule_drop').append($(this));
+		break;
+		
+		case "remove from Schedule":
+		$.ajax({
+				url: '../model/activity_db.php',
+				type: 'POST',
+				data: {	name: 'action',
+						action: 'remove_from_schedule',
+						a_id : list.getAttribute('a_id') 
+				},
+				success: function(data){
+					//location.reload();
+					//alert("removing from schedule");
+					//console.log("Data returned: " + data);
+					if(data) // 1 is a success
+					{
+						//location.reload();
+						// move activity to schedule list
+						$('div.header').each(function() {
+							//console.log("Activity ID is " + $(this).attr('a_id'));
+							if($(this).attr('a_id') == list.getAttribute('a_id')) {
+								$('#activities_pickup').append($(this));
+								// Change add to Schedule button to remove from Schedule
+								$(this).find('input.removeSchedule')
+								.val('add to Schedule')
+								.removeClass('removeSchedule')
+								.addClass('addSchedule');
+								
+								// Append the corresponding content block to the Schedule as well
+								$('div.content').each(function() {
+									if($(this).attr('a_id') == list.getAttribute('a_id')) {
+										$('#activities_pickup').append($(this));
+									}
+								});
+								
+								
+							}
+						});
 					}
-				});
-			}
-		});
-		break;	
+				}
+   			}); // end ajax call
+		
+		break;
 	}
 	
 	return false; // so that it does not bubble up to the accordion

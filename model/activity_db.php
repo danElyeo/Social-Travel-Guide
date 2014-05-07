@@ -69,6 +69,20 @@ if(isset($_POST['action']))
 				delete_activity($_POST['a_id']);
 			}
 		break;
+		
+		case "add_to_schedule":
+			if (isset($_POST['a_id']))
+			{
+				add_to_schedule($_POST['a_id']);
+			}
+		break;
+		
+		case "remove_from_schedule":
+			if (isset($_POST['a_id']))
+			{
+				remove_from_schedule($_POST['a_id']);
+			}
+		break;
 			
 	}
 }
@@ -233,5 +247,53 @@ function delete_activity($a_id)
         $error_message = $e->getMessage();
         display_db_error($error_message);
     }	
+}
+
+function add_to_schedule($a_id)
+{
+	global $db;
+	$query = 'UPDATE activity
+				SET in_schedule = :in_schedule
+				WHERE activity_id = :a_id';
+	try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':a_id', $a_id);
+        $statement->bindValue(':in_schedule', "1");
+   		
+        $row_count = $statement->execute();
+        $statement->closeCursor();
+		echo $row_count;
+        //if($row_count)
+		//{
+		//	header("Location: ../view/itinerary_details.php");
+		//}
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
+}
+
+function remove_from_schedule($a_id)
+{
+	global $db;
+	$query = 'UPDATE activity
+				SET in_schedule = :in_schedule
+				WHERE activity_id = :a_id';
+	try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(':a_id', $a_id);
+        $statement->bindValue(':in_schedule', "0");
+   		
+        $row_count = $statement->execute();
+        $statement->closeCursor();
+        echo $row_count;
+		//if($row_count)
+		//{
+		//	header("Location: ../view/itinerary_details.php");
+		//}
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        display_db_error($error_message);
+    }
 }
 			

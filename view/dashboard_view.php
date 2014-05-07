@@ -11,7 +11,7 @@ $_SESSION['itineraries'] = array();
 	<p>Welcome, <?php echo $_SESSION['username']; ?>, to the Social Travel Guide! </p>
 
     <!-- Show a menu that allows user to log out -->
-    <ul>
+    <ul style="list-style-type:none";>
     	<li><a href="view/new_itinerary.php">Create a new itinerary</a></li>
     	<li><a href="" onclick="logout(); return false;">Log out</a></li>
     </ul>

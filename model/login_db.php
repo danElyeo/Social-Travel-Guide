@@ -39,6 +39,9 @@ if(isset($_POST['username']) && isset($_POST['password']))
 // Connect to the database to get the user_info from user table
 function get_user_info($user, $pass) {
     global $db;
+	
+	$password = sha1($pass);
+	
     $query = 'SELECT * FROM user
               WHERE username = :username
 			  AND password = :password'
@@ -46,7 +49,7 @@ function get_user_info($user, $pass) {
     try {
         $statement = $db->prepare($query);
         $statement->bindValue(':username', $user);
-		$statement->bindValue(':password', $pass);
+		$statement->bindValue(':password', $password);
         $statement->execute();
         $result = $statement->fetch();
         $statement->closeCursor();
